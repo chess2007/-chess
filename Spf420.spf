@@ -14,7 +14,7 @@ REQUIRE SPMOVE       ~chess\lib\manipulators.spf \ стековые манипу
 \ REQUIRE SPMOVE       ~chess\lib\manipulators1.spf \ стековые манипуляторы 
 REQUIRE METER        ~chess\lib\meter.spf        \ измеритель времени исполнения слова при разовом и циклическом его исполнении
 
-S" F:\SPF4\spf4x.exe" SAVE BYE                   \ сохраняем расширенную форт-систему
+S" F:\SPF4\devel\~chess\BIN\spf4x.exe" SAVE BYE  \ сохраняем расширенную форт-систему
 \ S" F:\SPF4\spf4y.exe" SAVE BYE
 \EOF
 

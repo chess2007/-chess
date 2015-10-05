@@ -40,17 +40,20 @@ USER iol 0 iol !     \ направление ввода-вывода в лок 
 
 \ локально-именованные  							   \ синтаксис
 \ строки 
-: NOTFOUND  ( a u -- )   '("' nf2-exit  2- headl L{ LOAD-TEXT            RET, }L ; \ name(" текст строки ")
+\ : NOTFOUND  ( a u -- )   '("' nf2-exit  2- headl L{ LOAD-TEXT            RET, }L ; \ name(" текст строки ")
 : NOTFOUND  ( a u -- )   '"'  nf1-exit  1- headl L{ LOAD-TEXT            RET, }L ; \ name"  текст строки "
 \ макросы 
-: NOTFOUND  ( a u -- )   '(m' nf2-exit  2- headl L{ LOAD-TEXT ` EVALUATE RET, }L ; \ name(m текст макроса m)
+\ : NOTFOUND  ( a u -- )   '(m' nf2-exit  2- headl L{ LOAD-TEXT ` EVALUATE RET, }L ; \ name(m текст макроса m)
 : NOTFOUND  ( a u -- )   '['  nf1-exit  1- headl L{ LOAD-TEXT ` EVALUATE RET, }L ; \ name[  текст макроса ]
 \ замыкания 
-: NOTFOUND  ( a u -- )   '(c' nf2-exit  2- headl L{ LOAD-TEXT ` xts      RET, }L ; \ name(c текст замыкания c)
+\ : NOTFOUND  ( a u -- )   '(c' nf2-exit  2- headl L{ LOAD-TEXT ` xts      RET, }L ; \ name(c текст замыкания c)
 : NOTFOUND  ( a u -- )   '{'  nf1-exit  1- headl L{ LOAD-TEXT ` xts      RET, }L ; \ name{  текст замыкания }
 
 \ окончание формирования кода с локальным именем, оставляющего токен на стеке
 : x) ( -- )  RET, }L axtloc @ @ LIT, ; IMMEDIATE
+
+
+
 
 : razd? ( a -- fl) DUP C@ 0= SWAP C@ 0x20 = OR ;
 
@@ -124,6 +127,11 @@ USER iol 0 iol !     \ направление ввода-вывода в лок 
 : NOTFOUND ( a u -- ) u! a!  \ хвостовая оптимизация кода слова
   a u + 1- C@ ';' = u 1 > AND 0= IF a u NOTFOUND EXIT THEN
   a u 1- SFIND DROP BRANCH, POSTPONE -; ;
+
+\ неименованные замыкания
+I: (c load-text xts LIT, ;   
+ 
+
 
 \EOF
 
