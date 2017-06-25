@@ -99,7 +99,7 @@ R> CLOSE-FILE THROW
 
 USER-VALUE XSP 
 
-: NOTFOUND ( A U -- ) u! a! 0. f! beg! 40 buf] XSP sp!  0 flb! 0. sr! Lb! 0. f0! f9! 0. f/! f|! 0 f\! 0. flen! nz!
+: NOTFOUND ( A U -- ) u! a! 0. f! beg! 40 buf] XSP sp!  0. flb! sm! 0. sr! Lb! 0. f0! f9! 0. f/! f|! 0 f\! 0. flen! nz!
   u 1 > is flen 
   a C@ is nz 
   nz '\' = nz '|' = nz '/' = OR OR IF nz is sr '0' is nz 1 ELSE \ заголовок из одного из разделителей \ | / эквивалентен заголовку 0\ 0| 0/ соответственно
@@ -154,7 +154,7 @@ USER-VALUE XSP
          's' OF ` SEARCH   0 ENDOF   ( a1 u1 a2 u2 -- a3 u3 t/f )
          'h' OF ` hAlloc   0 ENDOF   ( n -- addr )
          'f' OF ` hFree    0 ENDOF   ( addr -- )
-         ',' OF ` LITERAL  0 ENDOF 
+         ',' OF ` LITERAL  0 ENDOF
          \ сравнения
          '=' OF ` =        0 ENDOF
          '>' OF ` >        0 ENDOF
@@ -169,7 +169,7 @@ USER-VALUE XSP
          'e' OF ` ELSE     0 ENDOF
          't' OF ` THEN     0 ENDOF
          'Y' OF ` TRUE     0 ENDOF
-         'y' OF ` FALSE    0 ENDOF
+         'y' OF ` odin     0 ENDOF
          \ циклы со счетчиком
          'G' OF ` aDO      0 ENDOF
          'D' OF ` ?DO      0 ENDOF
@@ -208,17 +208,22 @@ USER-VALUE XSP
          '}' OF ` }LAMBDA  0 ENDOF
          'X' OF ` EXECUTE  0 ENDOF
          \ обработка исключений
-         'o' OF ` odin     0 ENDOF
+         '0' OF ` FALSE    0 ENDOF
          \ инкремент содержимого памяти по адресу
         'j' OF ` 1+!       0 ENDOF  ( addr -- )
          1 SWAP ENDCASE
-         IF I C@ DUP DUP DUP DUP DUP DUP DUP '`' <>  SWAP ''' <> AND SWAP '"' <> AND SWAP ':' <> AND SWAP '_' <> AND SWAP 'p' <> AND SWAP 'v' <> AND
-                            IF '0' - DUP 1 10 WITHIN IF LIT, ` 1- ` CELLS sp LIT, ` + ` @ ELSE DROP THEN     \ параметры на стеке
+         IF I C@ \ DUP DUP DUP DUP DUP DUP DUP '`' <>  SWAP ''' <> AND SWAP '"' <> AND SWAP ':' <> AND SWAP '_' <> AND SWAP 'p' <> AND SWAP 'v' <> AND
+              is sm sm '`' <> sm ''' <> AND sm '"' <> AND sm ':' <> AND sm '_' <> AND sm 'p' <> AND sm 'v' <> AND
+                            IF sm '0' - is sm sm . sm 0 10 WITHIN 
+                                IF sm 0= ." zifra"
+                                   IF  sm LIT, ." null"
+                                   ELSE sm LIT, ` 1- ` CELLS sp LIT, ` + ` @ ." cell" THEN 
+                                THEN    \ параметры на стеке
                             ELSE DROP I C@ '`' = I C@ 'v' = OR I C@ 'p' = OR
                                  IF I C@ 'v' = I C@ 'p' = OR
                                     IF I 1+ C@ LIT, ` CELLS I C@ 'v' = IF xtarr ELSE prarr THEN LIT, ` + ` @  I C@ 'v' = IF ` EXECUTE THEN 
                                     ELSE
-                                      I 1+ C@ '0' - DUP 0 10 WITHIN 
+                                      I 1+ C@ '0' - DUP 1 10 WITHIN 
                                       IF   LIT, 
                                       ELSE '0' +  
                                            CASE
